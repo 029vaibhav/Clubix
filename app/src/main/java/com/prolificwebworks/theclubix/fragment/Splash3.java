@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.prolificwebworks.theclubix.R;
-import com.prolificwebworks.theclubix.activity.EventActivity;
 import com.prolificwebworks.theclubix.activity.HomeActivity;
 
 /**

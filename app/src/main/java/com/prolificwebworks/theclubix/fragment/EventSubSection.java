@@ -12,12 +12,10 @@ import android.view.ViewGroup;
 import com.prolificwebworks.theclubix.R;
 import com.prolificwebworks.theclubix.adapter.EventListAdapter;
 import com.prolificwebworks.theclubix.entities.AllEvents;
-import com.prolificwebworks.theclubix.entities.EventData;
 import com.prolificwebworks.theclubix.server.Client;
+import com.prolificwebworks.theclubix.utils.DialogShower;
 import com.prolificwebworks.theclubix.utils.EventTime;
 import com.prolificwebworks.theclubix.utils.MyEnum;
-
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -31,6 +29,9 @@ public class EventSubSection extends Fragment {
 
     EventTime eventTime;
     RecyclerView recyclerView;
+    DialogShower constants;
+
+
 
     public void setEventTime(EventTime eventTime) {
         this.eventTime = eventTime;
@@ -55,6 +56,8 @@ public class EventSubSection extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        constants = new DialogShower(getActivity());
+        constants.show();
 
         callServiceTogetData(eventTime);
 
@@ -75,9 +78,11 @@ public class EventSubSection extends Fragment {
                         @Override
                         public void success(AllEvents allEvents, Response response) {
 
+
+                            constants.dismiss();
+
                             MyEnum.INSTANCE.setToday(allEvents.getPostData());
                             setAdapterView(EventTime.TODAY);
-
 
 
                         }
@@ -89,6 +94,7 @@ public class EventSubSection extends Fragment {
                     });
 
                 } else {
+                    constants.dismiss();
                     setAdapterView(EventTime.TODAY);
                 }
 
@@ -120,6 +126,8 @@ public class EventSubSection extends Fragment {
                         @Override
                         public void success(AllEvents allEvents, Response response) {
 
+                            constants.dismiss();
+
                             MyEnum.INSTANCE.setTomorrow(allEvents.getPostData());
                             setAdapterView(EventTime.TOMORROW);
 
@@ -132,6 +140,7 @@ public class EventSubSection extends Fragment {
                     });
 
                 } else {
+                    constants.dismiss();
                     setAdapterView(EventTime.TOMORROW);
 
                 }
@@ -166,6 +175,8 @@ public class EventSubSection extends Fragment {
                         @Override
                         public void success(AllEvents allEvents, Response response) {
 
+                            constants.dismiss();
+
                             MyEnum.INSTANCE.setLater(allEvents.getPostData());
                             setAdapterView(EventTime.LATER);
 
@@ -178,6 +189,7 @@ public class EventSubSection extends Fragment {
                     });
 
                 } else {
+                    constants.dismiss();
                     setAdapterView(EventTime.LATER);
 
                 }
@@ -202,6 +214,51 @@ public class EventSubSection extends Fragment {
 
                 break;
             default:
+
+                if (MyEnum.INSTANCE.getToday() == null || MyEnum.INSTANCE.getToday().size() == 0) {
+
+
+                    Client.INSTANCE.getTodaysEvents(new Callback<AllEvents>() {
+                        @Override
+                        public void success(AllEvents allEvents, Response response) {
+
+                            constants.dismiss();
+
+                            MyEnum.INSTANCE.setToday(allEvents.getPostData());
+                            setAdapterView(EventTime.TODAY);
+
+
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
+                    });
+
+                } else {
+                    constants.dismiss();
+                    setAdapterView(EventTime.TODAY);
+                }
+
+
+                if (MyEnum.INSTANCE.getTomorrow() == null || MyEnum.INSTANCE.getTomorrow().size() == 0) {
+
+                    Client.INSTANCE.getTomorrowEvents(new Callback<AllEvents>() {
+                        @Override
+                        public void success(AllEvents allEvents, Response response) {
+
+                            MyEnum.INSTANCE.setTomorrow(allEvents.getPostData());
+
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
+                    });
+
+                }
 
         }
 

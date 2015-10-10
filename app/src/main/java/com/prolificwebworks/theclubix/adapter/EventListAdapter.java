@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.prolificwebworks.theclubix.R;
 import com.prolificwebworks.theclubix.entities.EventData;
+import com.prolificwebworks.theclubix.fragment.SingleEventFragment;
 import com.prolificwebworks.theclubix.utils.CustomFont;
 import com.prolificwebworks.theclubix.utils.EventTime;
 import com.prolificwebworks.theclubix.utils.MyEnum;
@@ -21,12 +22,12 @@ import java.util.List;
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
 
-    Fragment fragment;
+    Fragment context;
     List<EventData> allEvents;
 
     public EventListAdapter(Fragment context, EventTime eventTime) {
 
-        fragment = context;
+        this.context = context;
 
 
         switch (eventTime) {
@@ -70,7 +71,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.time.setText(eventData.getEvent_start_time());
 
 
-
     }
 
     @Override
@@ -81,7 +81,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         else return 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView imageBackground;
         public CustomFont eventName, location, time;
@@ -94,9 +94,18 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             location = (CustomFont) itemView.findViewById(R.id.location);
             time = (CustomFont) itemView.findViewById(R.id.time);
 
+            itemView.setOnClickListener(this);
+
 
         }
 
 
+        @Override
+        public void onClick(View v) {
+
+            SingleEventFragment fragment = SingleEventFragment.newInstance(allEvents.get(getAdapterPosition()).getPostId());
+            context.getFragmentManager().beginTransaction().replace(R.id.container_body, fragment).addToBackStack(null).commit();
+
+        }
     }
 }

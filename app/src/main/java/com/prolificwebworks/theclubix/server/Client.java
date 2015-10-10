@@ -39,6 +39,9 @@ public enum Client {
         @GET("/later_events.php")
         void getLaterEvents(@Query("eventlist") String eventTime, Callback<AllEvents> allEventsCallback);
 
+        @GET("/single_event.php")
+        void getSingleEvent(@Query("eventID") String eventID, Callback<AllEvents> allEventsCallback);
+
         @GET("/all_artist_listing.php")
         Artist getAllArtist();
 
@@ -90,6 +93,11 @@ public enum Client {
 
     public void getAllEvents(int pageNo, Callback<AllEvents> allEventsCallback) {
         requests.getAllEvents(pageNo, allEventsCallback);
+    }
+
+
+    public void getSingleEvent(String eventId, Callback<AllEvents> allEventsCallback) {
+        requests.getSingleEvent(eventId, allEventsCallback);
     }
 
     public void getTodaysEvents(Callback<AllEvents> allEventsCallback) {
