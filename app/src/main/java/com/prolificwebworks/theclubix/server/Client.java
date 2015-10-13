@@ -11,6 +11,7 @@ import com.prolificwebworks.theclubix.utils.EventTime;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -43,7 +44,7 @@ public enum Client {
         void getSingleEvent(@Query("eventID") String eventID, Callback<AllEvents> allEventsCallback);
 
         @GET("/all_artist_listing.php")
-        Artist getAllArtist();
+        void getAllArtist(Callback<Artist> artistCallback);
 
         @GET("/single_artist.php")
         Artist getSingleArtist(@Query("artistID") int artistId);
@@ -68,12 +69,17 @@ public enum Client {
 
 
         @GET("/cub_service_listing.php")
-        Club getAllClubs();
+        void getAllClubs(Callback<Club> allEventsCallback);
 
         @GET("/cub_service_listing.php")
         Club getSingleClub(@Query("cubID") int clubId);
 
+        @GET("/artistWithidArray.php")
+        void submitArtistId(@Query("artistID") String commaSeparatedIds, Callback<Response> responseCallback);
 
+
+        @GET("/clubWithidArray..php")
+        void submitClubIds(@Query("clubID") String clubIds, Callback<Response> responseCallback);
     }
 
     Client() {
@@ -112,8 +118,8 @@ public enum Client {
         requests.getLaterEvents(EventTime.LATER.name().toLowerCase(), allEventsCallback);
     }
 
-    public Artist getAllArtist() {
-        return requests.getAllArtist();
+    public void getAllArtist(Callback<Artist> artistCallback) {
+        requests.getAllArtist(artistCallback);
     }
 
     public Artist getSingleArtist(int artistId) {
@@ -144,12 +150,21 @@ public enum Client {
         requests.getClubImage();
     }
 
-    public Club getAllClubs() {
-        return requests.getAllClubs();
+    public void getAllClubs(Callback<Club> allEventsCallback) {
+        requests.getAllClubs(allEventsCallback);
     }
 
     public Club getSingleClud(int clubId) {
         return requests.getSingleClub(clubId);
     }
+
+    public void submitArtistIds(String artistIds, Callback<Response> responseCallback) {
+        requests.submitArtistId(artistIds, responseCallback);
+    }
+
+    public void submitClubIds(String clubIds, Callback<Response> responseCallback) {
+        requests.submitClubIds(clubIds, responseCallback);
+    }
+
 
 }
